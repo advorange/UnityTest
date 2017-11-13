@@ -1,41 +1,61 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : Weapon
 {
 	public float Duration = 2.0f;
 	public float Accuracy = 90.0f;
+	public float ReloadTimeInMilliseconds = 1000;
 	public int VelocityMultiplier = 20;
 	public int BulletCount = 1;
+	public int AmmoPerShot = 1;
+	public int MagazineSize = 10;
 	public GameObject BulletSpawn;
-	private GameObject Bullet;
 	public Material BulletSkin;
 	public Vector3 BulletScale = new Vector3(.125f, .125f, .125f);
 
-	private int FramesSinceLastFired;
-	private bool WeaponHasBeenTriggered;
+	private float NextAllowedToFire;
+	private int CurrentMagazineAmmo;
+	private GameObject Bullet;
 
-	protected void Start()
+	private static Text CurrentAmmoText;
+	private static Text MagazineSizeText;
+	private static bool UILoaded;
+
+	protected virtual void Start()
 	{
+		CurrentMagazineAmmo = MagazineSize;
 		Bullet = Resources.Load<GameObject>("Bullet Prefab");
+		if (!UILoaded)
+		{
+			CurrentAmmoText = GameObject.FindGameObjectWithTag("CurrentAmmo").GetComponent<Text>();
+			MagazineSizeText = GameObject.FindGameObjectWithTag("MagazineSize").GetComponent<Text>();
+			UILoaded = true;
+		}
 	}
 
-	protected void Update()
+	protected virtual void Update()
 	{
 		//Have a fire rate so all guns don't trigger stupidly fast
-		if (WeaponHasBeenTriggered)
+		if (NextAllowedToFire > Time.time)
 		{
-			++FramesSinceLastFired;
-			if (FramesSinceLastFired >= FramesPerAttack)
-			{
-				FramesSinceLastFired = 0;
-				WeaponHasBeenTriggered = false;
-			}
+			return;
+		}
+
+		MagazineSizeText.text = MagazineSize.ToString();
+		CurrentAmmoText.text = CurrentMagazineAmmo.ToString();
+		if (CurrentMagazineAmmo <= 0)
+		{
+			NextAllowedToFire = Time.time + ReloadTimeInMilliseconds / 1000.0f;
+			ReloadWeapon();
 		}
 		else if (Input.GetKey(KeyCode.Mouse0))
 		{
+			CurrentMagazineAmmo -= AmmoPerShot;
+			NextAllowedToFire = Time.time + AttackRateInMilliseconds / 1000.0f;
 			TriggerWeapon();
-			WeaponHasBeenTriggered = true;
 		}
 	}
 	protected override void TriggerWeapon()
@@ -53,6 +73,11 @@ public class Gun : Weapon
 			//Get rid of the bullet eventually
 			Destroy(bullet, Duration);
 		}
+	}
+	protected virtual void ReloadWeapon()
+	{
+		CurrentMagazineAmmo = MagazineSize;
+		Debug.Log("Reloading Weapon");
 	}
 	protected Vector3 GenerateVelocityOffset()
 	{
