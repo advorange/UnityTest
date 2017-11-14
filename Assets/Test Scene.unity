@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 43343514}
   - component: {fileID: 43343513}
   - component: {fileID: 43343512}
+  - component: {fileID: 43343516}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -196,6 +197,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &43343516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 43343511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d854fc7eea583f4c9e1e58733c11723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &250713433
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,13 +592,13 @@ MonoBehaviour:
   AttackRateInMilliseconds: 100
   Player: {fileID: 1217854847}
   Duration: 2
-  Accuracy: 0
+  Accuracy: 90
   ReloadTimeInMilliseconds: 1000
   VelocityMultiplier: 20
   BulletCount: 1
   AmmoPerShot: 1
   MagazineSize: 10
-  BulletType: {fileID: 1890688220274458, guid: 8f74854502401d34aad1ee485ac7dc59, type: 2}
+  BulletType: {fileID: 1538611936567934, guid: fabf139cc19900e4da765afbafb632a5, type: 2}
   BulletSpawn: {fileID: 510637793}
   BulletSkin: {fileID: 2100000, guid: 1e1ea1a47112ba945a692224e3664b26, type: 2}
   BulletScale: {x: 0.125, y: 0.125, z: 0.125}

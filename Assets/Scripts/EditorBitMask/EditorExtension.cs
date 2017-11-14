@@ -11,26 +11,27 @@ namespace Assets.EditorBitMask
 			var itemNames = Enum.GetNames(aType);
 			var itemValues = Enum.GetValues(aType) as int[];
 
-			int val = aMask;
-			int maskVal = 0;
+			var val = aMask;
+			var maskVal = 0;
 			for (int i = 0; i < itemValues.Length; i++)
 			{
-				if (val == 0 || (itemValues[i] != 0 && (val & itemValues[i]) == itemValues[i]))
+				var curVal = itemValues[i];
+				if ((curVal == 0 && val == 0) || (curVal != 0 && (val & curVal) == curVal))
 				{
 					maskVal |= 1 << i;
 				}
 			}
-			int newMaskVal = EditorGUI.MaskField(aPosition, aLabel, maskVal, itemNames);
-			int changes = maskVal ^ newMaskVal;
 
-			for (int i = 0; i < itemValues.Length; ++i)
+			var newMaskVal = EditorGUI.MaskField(aPosition, aLabel, maskVal, itemNames);
+			var changes = maskVal ^ newMaskVal;
+			for (int i = 0; i < itemValues.Length; i++)
 			{
 				//Has this list item changed?
 				if ((changes & (1 << i)) == 0)
 				{
 					continue;
 				}
-				//Has it been set?
+				//Has it been reset?
 				else if ((newMaskVal & (1 << i)) == 0)
 				{
 					val &= ~itemValues[i];
@@ -42,7 +43,7 @@ namespace Assets.EditorBitMask
 					val = 0;
 					break;
 				}
-
+				//Set it
 				val |= itemValues[i];
 			}
 			return val;

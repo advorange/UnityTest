@@ -14,13 +14,23 @@ namespace Assets.HelperClasses
 			//Make the spread smaller (otherwise even 90 accuracy looks very inaccurate)
 			var spread = largeSpread * .2f;
 
-			//Only affect the x and y since this gets applied to the forward transform
-			//and guns generally don't shoot backwards.
-			return new Vector3(GenerateOffsetPoint(spread), GenerateOffsetPoint(spread));
+			//Only affect the x and y since this gets applied to the forward transform and guns generally don't shoot backwards.
+			var offsetPoint = GenerateOffsetPoint(spread);
+			return new Vector3(offsetPoint.x, offsetPoint.y);
 		}
-		public static float GenerateOffsetPoint(float spread)
+		public static Vector2 GenerateOffsetPoint(float spread)
 		{
-			return spread - UnityEngine.Random.Range(0, 2 * spread);
+//Circle
+#if true
+			return UnityEngine.Random.insideUnitCircle * spread;
+//Square
+#else
+			return new Vector2
+			{
+				x = spread - UnityEngine.Random.Range(0, 2 * spread),
+				y = spread - UnityEngine.Random.Range(0, 2 * spread),
+			};
+#endif
 		}
 	}
 }

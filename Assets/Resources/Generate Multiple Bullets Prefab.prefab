@@ -123,12 +123,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cea24dd2fc1c28543848fba0112b583e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Targets: 3
+  Targets: 0
   Duration: 1
   Accuracy: 50
-  ExtraBulletsCount: 1
+  VelocityMagnitudeMultiplier: 0.5
+  ExtraBulletsCount: 4
   BulletType: {fileID: 1538611936567934, guid: fabf139cc19900e4da765afbafb632a5, type: 2}
-  BulletScale: {x: 0.125, y: 0.125, z: 0.125}
+  BulletScale: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!135 &135970753318852862
 SphereCollider:
   m_ObjectHideFlags: 1
