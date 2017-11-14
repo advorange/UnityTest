@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityTest.Assets;
 
 namespace Assets.WeaponScripts.GunScripts.BulletScripts
 {
@@ -25,6 +26,8 @@ namespace Assets.WeaponScripts.GunScripts.BulletScripts
 			var shootable = collision.gameObject.GetComponent<Shootable>();
 			if (shootable)
 			{
+				var damage = this.GetComponentInParent<Gun>().Damage;
+
 				foreach (var bce in _CollisionEffects.Where(x => x.Targets.HasFlag(BulletEffectTargets.Shootable)))
 				{
 					bce.InvokeEffects(collision);

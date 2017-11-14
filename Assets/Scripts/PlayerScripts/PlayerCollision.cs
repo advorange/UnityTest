@@ -6,7 +6,7 @@ namespace Assets.PlayerScripts
 	{
 		private void OnCollisionEnter(Collision collision)
 		{
-
+			var dog = 1;
 		}
 	}
 }

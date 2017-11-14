@@ -56,15 +56,11 @@ namespace UnityTest.Assets
 		{
 			for (int i = 0; i < BulletCount; ++i)
 			{
-				//Create bullet starting at spawn point and with player's rotation
-				var bullet = Instantiate(BulletType, BulletSpawn.position, Player.rotation);
-				bullet.GetComponent<Transform>().localScale = BulletScale;
-
-				//Give it a velocity to make it go forward with some variation
-				var calcVelo = (bullet.transform.forward + BulletHelper.GenerateVelocityOffset(Accuracy)).normalized;
-				bullet.GetComponent<Rigidbody>().velocity = calcVelo * VelocityMultiplier;
-
-				//Get rid of the bullet eventually
+				//TODO: make bullets ignore collisions with other bullets
+				//Create bullet starting at the spawning bullet's position and rotation, give it a scale, then velocity, then destroy it
+				var bullet = Instantiate(BulletType, BulletSpawn.position, Player.rotation, this.transform);
+				bullet.SetBulletScale(BulletScale);
+				bullet.SetBulletVelocity(Accuracy, VelocityMultiplier);
 				Destroy(bullet, Duration);
 			}
 		}
