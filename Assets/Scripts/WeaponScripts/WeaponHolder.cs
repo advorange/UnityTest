@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.HelperClasses;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace Assets.Scripts.WeaponScripts
 	{
 		private const int SIZE = 4;
 		public GameObject[] Weapons = new GameObject[SIZE];
+
 		private int _CurIndex;
 
 		protected virtual void OnValidate()
@@ -58,19 +60,19 @@ namespace Assets.Scripts.WeaponScripts
 			}
 
 			//Get rid of all other visible weapons on the player
+			//Also update their stored metadata, so when switched back they will have the same info
 			for (int i = 0; i < this.transform.childCount; ++i)
 			{
 				var childWeapon = this.transform.GetChild(i)?.GetComponent<Weapon>();
 				if (childWeapon)
 				{
+					childWeapon.SaveRuntimeMetadata();
 					Destroy(childWeapon.gameObject);
 				}
 			}
 
 			_CurIndex = index;
-			var curWep = Weapons[_CurIndex];
-			var newWep = Instantiate(curWep, this.transform, false);
-			newWep.IgnoreParentScaling();
+			Weapons[_CurIndex].GetComponent<Weapon>().Copy(this.transform);
 		}
 	}
 }
