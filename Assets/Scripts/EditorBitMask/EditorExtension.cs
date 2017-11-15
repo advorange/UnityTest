@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.EditorBitMask
+namespace Assets.Scripts.EditorBitMask
 {
 	public static class EditorExtension
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.EditorBitMask
+namespace Assets.Scripts.EditorBitMask
 {
 	public class BitMaskAttribute : PropertyAttribute
 	{

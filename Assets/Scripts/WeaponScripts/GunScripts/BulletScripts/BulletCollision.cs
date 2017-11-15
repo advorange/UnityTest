@@ -1,47 +1,41 @@
 ﻿using System.Linq;
 using UnityEngine;
-using UnityTest.Assets;
 
-namespace Assets.WeaponScripts.GunScripts.BulletScripts
+namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
 	public class BulletCollision : MonoBehaviour
 	{
-		private Rigidbody _RigidBody;
-		private Vector3 _LastFrameVelocity;
+		private Collider _Collider;
 		private BulletCollisionEffect[] _CollisionEffects;
 
-		private void Start()
+		protected virtual void Start()
 		{
-			_RigidBody = this.GetComponent<Rigidbody>();
-			_CollisionEffects = this.GetComponents<BulletCollisionEffect>();
+			_Collider = this.GetComponent<Collider>();
+			_CollisionEffects = this.GetComponentsInParent<BulletCollisionEffect>();
 		}
-
-		private void Update()
+		protected virtual void OnCollisionEnter(Collision collision)
 		{
-			_LastFrameVelocity = _RigidBody.velocity;
-		}
+			if (collision.gameObject.tag == Constants.BULLET_TAG)
+			{
+				Physics.IgnoreCollision(_Collider, collision.gameObject.GetComponent<Collider>());
+				return;
+			}
 
-		private void OnCollisionEnter(Collision collision)
-		{
+			//Shootable
 			var shootable = collision.gameObject.GetComponent<Shootable>();
 			if (shootable)
 			{
-				var damage = this.GetComponentInParent<Gun>().Damage;
-
+				shootable.OnShot(this);
 				foreach (var bce in _CollisionEffects.Where(x => x.Targets.HasFlag(BulletEffectTargets.Shootable)))
 				{
 					bce.InvokeEffects(collision);
 				}
 			}
 
+			//Reflectable
 			var reflectable = collision.gameObject.GetComponent<Reflectable>();
 			if (reflectable)
 			{
-				//Get the angle to bounce off at (basically supplementary angle) from the contact point
-				var dir = Vector3.Reflect(_LastFrameVelocity.normalized, collision.contacts[0].normal);
-				//Shoot the bullet back out in that direction with its same magnitude
-				_RigidBody.velocity = dir * _LastFrameVelocity.magnitude;
-
 				foreach (var bce in _CollisionEffects.Where(x => x.Targets.HasFlag(BulletEffectTargets.Reflectable)))
 				{
 					bce.InvokeEffects(collision);
@@ -53,7 +47,6 @@ namespace Assets.WeaponScripts.GunScripts.BulletScripts
 			{
 				bce.InvokeEffects(collision);
 			}
-			Destroy(this);
 		}
 	}
 }

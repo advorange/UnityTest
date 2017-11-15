@@ -1,8 +1,8 @@
-﻿using Assets.HelperClasses;
+﻿using Assets.Scripts.HelperClasses;
 using System;
 using UnityEngine;
 
-namespace Assets.WeaponScripts.GunScripts.BulletScripts
+namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
 	public class GenerateMultipleBullets : BulletCollisionEffect
 	{
@@ -14,6 +14,7 @@ namespace Assets.WeaponScripts.GunScripts.BulletScripts
 		public Vector3 BulletScale = new Vector3(.1f, .1f, .1f);
 
 		private Rigidbody _RigidBody;
+		private bool _AlreadyUsed;
 
 		protected virtual void Start()
 		{
@@ -27,11 +28,17 @@ namespace Assets.WeaponScripts.GunScripts.BulletScripts
 
 		public override void InvokeEffects(Collision collision)
 		{
+			if (_AlreadyUsed)
+			{
+				return;
+			}
+
+			_AlreadyUsed = true;
 			for (int i = 0; i < ExtraBulletsCount; ++i)
 			{
 				//Create bullet starting at the spawning bullet's position and rotation, give it a scale, then velocity, then destroy it
-				var bullet = Instantiate(BulletType, _RigidBody.position, _RigidBody.rotation, this.GetComponentInParent<Transform>());
-				bullet.SetBulletScale(BulletScale);
+				var bullet = Instantiate(BulletType, _RigidBody.position, Quaternion.LookRotation(collision.contacts[0].normal));
+				bullet.transform.localScale = BulletScale;
 				bullet.SetBulletVelocity(Accuracy, VelocityMultiplier, _RigidBody.velocity.magnitude);
 				Destroy(bullet, Duration);
 			}

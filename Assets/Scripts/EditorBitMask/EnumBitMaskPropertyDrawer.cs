@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Assets.EditorBitMask
+namespace Assets.Scripts.EditorBitMask
 {
 	[CustomPropertyDrawer(typeof(BitMaskAttribute))]
 	public class EnumBitMaskPropertyDrawer : PropertyDrawer

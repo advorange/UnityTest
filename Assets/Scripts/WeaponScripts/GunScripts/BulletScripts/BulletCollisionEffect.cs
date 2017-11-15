@@ -1,7 +1,7 @@
-﻿using Assets.EditorBitMask;
+﻿using Assets.Scripts.EditorBitMask;
 using UnityEngine;
 
-namespace Assets.WeaponScripts.GunScripts.BulletScripts
+namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
 	public abstract class BulletCollisionEffect : MonoBehaviour
 	{

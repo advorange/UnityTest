@@ -24,10 +24,11 @@ GameObject:
   - component: {fileID: 23702972103395286}
   - component: {fileID: 54756650715480594}
   - component: {fileID: 114031470231524892}
+  - component: {fileID: 114176294452303294}
   - component: {fileID: 114076263274739946}
   m_Layer: 0
   m_Name: Generate Multiple Bullets Prefab
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,13 +124,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cea24dd2fc1c28543848fba0112b583e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Targets: 0
+  Targets: 2
   Duration: 1
   Accuracy: 50
-  VelocityMagnitudeMultiplier: 0.5
-  ExtraBulletsCount: 4
+  VelocityMultiplier: 0.5
+  ExtraBulletsCount: 1
   BulletType: {fileID: 1538611936567934, guid: fabf139cc19900e4da765afbafb632a5, type: 2}
   BulletScale: {x: 0.1, y: 0.1, z: 0.1}
+--- !u!114 &114176294452303294
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1890688220274458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655e5360dece0ce42a6503d3869ce939, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Targets: 2
+  VelocityMultiplier: 1
 --- !u!135 &135970753318852862
 SphereCollider:
   m_ObjectHideFlags: 1

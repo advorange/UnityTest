@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.PlayerScripts
+namespace Assets.Scripts.PlayerScripts
 {
 	public class PlayerCollision : MonoBehaviour
 	{

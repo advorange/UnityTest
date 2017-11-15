@@ -1,8 +1,8 @@
-﻿using Assets.HelperClasses;
+﻿using Assets.Scripts.HelperClasses;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityTest.Assets
+namespace Assets.Scripts
 {
 	public class Gun : Weapon
 	{
@@ -26,8 +26,8 @@ namespace UnityTest.Assets
 		protected virtual void Start()
 		{
 			_CurrentMagazineAmmo = MagazineSize;
-			_CurrentAmmoText = GameObject.FindGameObjectWithTag("CurrentAmmo").GetComponent<Text>();
-			_MagazineSizeText = GameObject.FindGameObjectWithTag("MagazineSize").GetComponent<Text>();
+			_CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Constants.AMMO_TAG).GetComponent<Text>();
+			_MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Constants.MAGAZINE_TAG).GetComponent<Text>();
 		}
 
 		protected virtual void Update()
@@ -40,34 +40,34 @@ namespace UnityTest.Assets
 
 			_MagazineSizeText.text = MagazineSize.ToString();
 			_CurrentAmmoText.text = _CurrentMagazineAmmo.ToString();
+			_CurrentAmmoText.color = Color.gray;
 			if (_CurrentMagazineAmmo <= 0)
 			{
-				_NextAllowedToFire = Time.time + ReloadTimeInMilliseconds / 1000.0f;
 				ReloadWeapon();
 			}
 			else if (Input.GetKey(KeyCode.Mouse0))
 			{
-				_CurrentMagazineAmmo -= AmmoPerShot;
-				_NextAllowedToFire = Time.time + AttackRateInMilliseconds / 1000.0f;
 				TriggerWeapon();
 			}
 		}
 		protected override void TriggerWeapon()
 		{
+			_NextAllowedToFire = Time.time + AttackRateInMilliseconds / 1000.0f;
+			_CurrentMagazineAmmo -= AmmoPerShot;
 			for (int i = 0; i < BulletCount; ++i)
 			{
-				//TODO: make bullets ignore collisions with other bullets
 				//Create bullet starting at the spawning bullet's position and rotation, give it a scale, then velocity, then destroy it
-				var bullet = Instantiate(BulletType, BulletSpawn.position, Player.rotation, this.transform);
-				bullet.SetBulletScale(BulletScale);
+				var bullet = Instantiate(BulletType, BulletSpawn.position, this.transform.parent.transform.rotation);
+				bullet.transform.localScale = BulletScale;
 				bullet.SetBulletVelocity(Accuracy, VelocityMultiplier);
 				Destroy(bullet, Duration);
 			}
 		}
 		protected virtual void ReloadWeapon()
 		{
+			_NextAllowedToFire = Time.time + ReloadTimeInMilliseconds / 1000.0f;
 			_CurrentMagazineAmmo = MagazineSize;
-			Debug.Log("Reloading Weapon");
+			_CurrentAmmoText.color = Color.red;
 		}
 	}
 }

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CurrentAmmo
   - MagazineSize
+  - Bullet
+  - Gun
   layers:
   - Default
   - TransparentFX

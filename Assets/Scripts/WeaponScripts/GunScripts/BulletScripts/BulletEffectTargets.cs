@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.WeaponScripts.GunScripts.BulletScripts
+namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
 	[Flags]
 	public enum BulletEffectTargets : uint
