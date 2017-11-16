@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58e835dbcf12674da5744b876444427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IgnoredTags:
+  - Bullet
 --- !u!114 &114076263274739946
 MonoBehaviour:
   m_ObjectHideFlags: 1

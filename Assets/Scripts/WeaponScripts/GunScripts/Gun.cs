@@ -22,19 +22,18 @@ namespace Assets.Scripts
 		private Text _CurrentAmmoText;
 		private Text _MagazineSizeText;
 
-		protected virtual void Awake()
+		private void Awake()
 		{
 			CurrentMagazineSize = MagazineSize;
 		}
-		protected virtual void Start()
+		private void Start()
 		{
-			_CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Constants.AMMO_TAG).GetComponent<Text>();
-			_MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Constants.MAGAZINE_TAG).GetComponent<Text>();
+			_CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Tags.Ammo).GetComponent<Text>();
+			_MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Tags.Magazine).GetComponent<Text>();
 		}
 
 		protected override void UseWeapon()
 		{
-			UpdateUI();
 			if (CurrentMagazineSize <= 0)
 			{
 				ReloadWeapon();
@@ -44,7 +43,7 @@ namespace Assets.Scripts
 				FireBullets();
 			}
 		}
-		private void UpdateUI()
+		protected override void UpdateUI()
 		{
 			_MagazineSizeText.text = MagazineSize.ToString();
 			_CurrentAmmoText.text = CurrentMagazineSize.ToString();
@@ -52,12 +51,13 @@ namespace Assets.Scripts
 		}
 		private void ReloadWeapon()
 		{
-			_NextAllowedToAttack = Time.time + ReloadTimeInMilliseconds / 1000.0f;
+			NextAllowedToAttack = Time.time + ReloadTimeInMilliseconds / 1000.0f;
 			_CurrentAmmoText.color = Color.red;
 			CurrentMagazineSize = MagazineSize;
 		}
 		private void FireBullets()
 		{
+			NextAllowedToAttack = Time.time + AttackRateInMilliseconds / 1000.0f;
 			CurrentMagazineSize -= AmmoPerShot;
 			for (int i = 0; i < BulletCount; ++i)
 			{

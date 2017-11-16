@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
-	public class GenerateMultipleBullets : BulletCollisionEffect
+	public class GenerateMultipleBullets : WeaponCollisionEffect
 	{
 		public float Duration = 1.0f;
 		public float Accuracy = 50.0f;

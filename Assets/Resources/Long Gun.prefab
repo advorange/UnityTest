@@ -178,7 +178,7 @@ MonoBehaviour:
   BulletCount: 1
   AmmoPerShot: 1
   MagazineSize: 10
-  BulletType: {fileID: 1890688220274458, guid: 8f74854502401d34aad1ee485ac7dc59, type: 2}
+  BulletType: {fileID: 1538611936567934, guid: fabf139cc19900e4da765afbafb632a5, type: 2}
   BulletSpawn: {fileID: 4871630801016224}
   BulletSkin: {fileID: 2100000, guid: 1e1ea1a47112ba945a692224e3664b26, type: 2}
   BulletScale: {x: 0.125, y: 0.125, z: 0.125}

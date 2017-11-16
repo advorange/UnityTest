@@ -1,12 +1,11 @@
 ﻿using Assets.Scripts.HelperClasses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.WeaponScripts
 {
-	public class WeaponHolder : MonoBehaviour
+	public sealed class WeaponHolder : MonoBehaviour
 	{
 		private const int SIZE = 4;
 		public GameObject[] Weapons = new GameObject[SIZE];
@@ -14,7 +13,7 @@ namespace Assets.Scripts.WeaponScripts
 		private GameObject[] RuntimeWeapons = new GameObject[SIZE];
 		private int _CurIndex;
 
-		protected virtual void OnValidate()
+		private void OnValidate()
 		{
 			if (Weapons.Length != SIZE)
 			{
@@ -22,27 +21,41 @@ namespace Assets.Scripts.WeaponScripts
 				Array.Resize(ref Weapons, SIZE);
 			}
 		}
-		protected virtual void Start()
+		private void Start()
 		{
-			AttachWeaponToPlayer();
+			AttachWeaponToPlayer(0);
 		}
-		protected virtual void Update()
+		private void Update()
 		{
 			var scroll = InputHelper.MouseScrollWheel;
-			if (!scroll.Equals(default(float)))
+			if (!scroll.Equals(0.0f))
 			{
-				AttachWeaponToPlayer(GetNextWeapon(_CurIndex, scroll < 0.0f));
+				AttachWeaponToPlayer(GetNextValidWeaponIndex(_CurIndex, scroll < 0.0f));
 			}
 		}
 
-		private int GetNextWeapon(int curIndex, bool down)
+		internal void ReplaceWeapon(Weapon weapon, int index)
+		{
+			Weapons[index] = weapon.gameObject;
+			//If current index reattach the weapon
+			if (_CurIndex == index)
+			{
+				AttachWeaponToPlayer(_CurIndex);
+			}
+		}
+		public Weapon GetCurrentlyHeldWeapon()
+		{
+			//return RuntimeWeapons[_CurIndex]?.GetComponent<Weapon>(); Which one to use?
+			return this.gameObject.GetComponentInChildren<Weapon>();
+		}
+		private int GetNextValidWeaponIndex(int index, bool down)
 		{
 			if (Weapons.All(x => x == null))
 			{
 				return -1;
 			}
 
-			var newIndex = down ? curIndex - 1 : curIndex + 1;
+			var newIndex = down ? index - 1 : index + 1;
 			if (newIndex >= Weapons.Length)
 			{
 				newIndex = 0;
@@ -51,20 +64,20 @@ namespace Assets.Scripts.WeaponScripts
 			{
 				newIndex = Weapons.Count(x => x != null) - 1;
 			}
-			return Weapons[newIndex] == null ? GetNextWeapon(newIndex, down) : newIndex;
+			return Weapons[newIndex] == null ? GetNextValidWeaponIndex(newIndex, down) : newIndex;
 		}
-		private void AttachWeaponToPlayer(int index = 0)
+		private void AttachWeaponToPlayer(int index)
 		{
 			if (index == -1)
 			{
 				return;
 			}
 
-			//Get rid of all other visible weapons on the player
-			//Also update their stored metadata, so when switched back they will have the same info
+			//Hide all other children
 			for (int i = 0; i < this.transform.childCount; ++i)
 			{
 				this.transform.GetChild(i)?.GetComponent<Weapon>()?.HideWeapon();
+				Debug.Log($"Hid a weapon while trying to bring {_CurIndex} up");
 			}
 
 			_CurIndex = index;
@@ -76,17 +89,16 @@ namespace Assets.Scripts.WeaponScripts
 			}
 
 			var curRuntimeWep = RuntimeWeapons[_CurIndex]?.GetComponent<Weapon>();
-			if (curRuntimeWep?.RuntimeGuid != curWep?.RuntimeGuid)
+			GameObject child;
+			if (curRuntimeWep?.RuntimeGuid != curWep?.RuntimeGuid && curWep.TryCreate(this.transform, out child))
 			{
-				GameObject child;
-				if (curWep.TryCreate(this.transform, out child))
-				{
-					RuntimeWeapons[_CurIndex] = child;
-				}
+				RuntimeWeapons[_CurIndex] = child;
+				Debug.Log($"Created weapon at {_CurIndex}");
 			}
 			else
 			{
-				curRuntimeWep.GetComponent<Weapon>().UnhideWeapon();
+				curRuntimeWep.UnhideWeapon();
+				Debug.Log($"Unhid weapon at {_CurIndex}");
 			}
 		}
 	}

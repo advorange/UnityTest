@@ -1,23 +1,19 @@
 ﻿using Assets.Scripts.HelperClasses;
-using Assets.Scripts.WeaponScripts.GunScripts.BulletScripts;
+using Assets.Scripts.WeaponScripts;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-	public class Shootable : MonoBehaviour
+	public class Shootable : Damagable
 	{
-		public int StartingLife = 100;
-		private int _CurrentLife;
-
-		protected virtual void Start()
+		public override void Interact(Collision collision, WeaponCollisionEffect[] effects)
 		{
-			_CurrentLife = StartingLife;
-		}
-		public void OnShot(BulletCollision bullet)
-		{
-			var gun = GetObjectHelper.FindGameObjectWithTag(Constants.GUN_TAG).GetComponent<Gun>();
-			_CurrentLife -= gun.Damage;
-			//TODO: implement life going down
+			var weapon = GetObjectHelper.GetPlayer().GetComponent<WeaponHolder>().GetCurrentlyHeldWeapon();
+			_CurrentLife -= weapon.Damage;
+			foreach (var collisionEffect in effects.GetCollisionEffects(Targets))
+			{
+				collisionEffect.InvokeEffects(collision);
+			}
 		}
 	}
 }

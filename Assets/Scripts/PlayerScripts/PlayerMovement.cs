@@ -13,7 +13,6 @@ namespace Assets.Scripts.PlayerScripts
 
 		private void FixedUpdate()
 		{
-			//TODO: change the variables to something in the constants file
 			var controller = this.GetComponent<CharacterController>();
 			if (controller.isGrounded)
 			{

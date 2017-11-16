@@ -8,30 +8,30 @@ namespace Assets.Scripts
 {
 	public abstract class Weapon : MonoBehaviour
 	{
-		public string RuntimeGuid { get; private set; } = Guid.NewGuid().ToString();
+		public string RuntimeGuid { get; protected set; } = Guid.NewGuid().ToString();
 		public string Name;
 		public int Damage = 10;
 		public float Knockback = 1.0f;
 		public float AttackRateInMilliseconds = 100;
 
 		private static Type[] _DefaultComponentsToToggle = new[] { typeof(MeshRenderer) };
-		protected float _NextAllowedToAttack;
-		protected bool _IsVisible = true;
+		public float NextAllowedToAttack { get; protected set; }
+		public bool IsVisible { get; protected set; } = true;
+		public bool AllowedToUse => IsVisible && NextAllowedToAttack <= Time.time;
 
-		private void Update()
+		/// <summary>
+		/// Base implementation calls <see cref="UpdateUI"/> and <see cref="UseWeapon"/> if <see cref="AllowedToUse"/> is true.
+		/// </summary>
+		protected virtual void Update()
 		{
-			if (!_IsVisible || _NextAllowedToAttack > Time.time)
+			if (AllowedToUse)
 			{
-				return;
-			}
-
-			//Using weapon
-			{
-				_NextAllowedToAttack = Time.time + AttackRateInMilliseconds / 1000.0f;
+				UpdateUI();
 				UseWeapon();
 			}
 		}
 		protected abstract void UseWeapon();
+		protected abstract void UpdateUI();
 		/// <summary>
 		/// Creates a new <see cref="GameObject"/> from this and attaches it to <paramref name="parent"/>.
 		/// </summary>
@@ -64,7 +64,7 @@ namespace Assets.Scripts
 		public void UnhideWeapon(Type[] componentsToTurnOff = null) => ToggleComponents(componentsToTurnOff, true);
 		private void ToggleComponents(Type[] components, bool value)
 		{
-			_IsVisible = value;
+			IsVisible = value;
 			foreach (var renderType in ReturnRendererTypes(components))
 			{
 				var component = this.GetComponent(renderType) as Renderer;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
-	public class ReflectBullet : BulletCollisionEffect
+	public class ReflectBullet : WeaponCollisionEffect
 	{
 		public float VelocityMultiplier = .5f;
 

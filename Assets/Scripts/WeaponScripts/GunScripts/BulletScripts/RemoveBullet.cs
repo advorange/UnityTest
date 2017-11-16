@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
-	public class RemoveBullet : BulletCollisionEffect
+	public class RemoveBullet : WeaponCollisionEffect
 	{
 		public override void InvokeEffects(Collision collision)
 		{
