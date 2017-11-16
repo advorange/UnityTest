@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.HelperClasses;
-using Assets.Scripts.WeaponScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +19,6 @@ namespace Assets.Scripts
 		public Material BulletSkin;
 		public Vector3 BulletScale = new Vector3(.125f, .125f, .125f);
 
-		private float _NextAllowedToFire;
 		private Text _CurrentAmmoText;
 		private Text _MagazineSizeText;
 
@@ -33,30 +31,33 @@ namespace Assets.Scripts
 			_CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Constants.AMMO_TAG).GetComponent<Text>();
 			_MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Constants.MAGAZINE_TAG).GetComponent<Text>();
 		}
-		protected virtual void Update()
-		{
-			//Have a fire rate so all guns don't trigger stupidly fast
-			if (_NextAllowedToFire > Time.time)
-			{
-				return;
-			}
 
-			_MagazineSizeText.text = MagazineSize.ToString();
-			_CurrentAmmoText.text = CurrentMagazineSize.ToString();
-			_CurrentAmmoText.color = Color.gray;
+		protected override void UseWeapon()
+		{
+			UpdateUI();
 			if (CurrentMagazineSize <= 0)
 			{
 				ReloadWeapon();
 			}
 			else if (Input.GetKey(KeyCode.Mouse0))
 			{
-				TriggerWeapon();
+				FireBullets();
 			}
 		}
-
-		protected override void TriggerWeapon()
+		private void UpdateUI()
 		{
-			_NextAllowedToFire = Time.time + AttackRateInMilliseconds / 1000.0f;
+			_MagazineSizeText.text = MagazineSize.ToString();
+			_CurrentAmmoText.text = CurrentMagazineSize.ToString();
+			_CurrentAmmoText.color = Color.gray;
+		}
+		private void ReloadWeapon()
+		{
+			_NextAllowedToAttack = Time.time + ReloadTimeInMilliseconds / 1000.0f;
+			_CurrentAmmoText.color = Color.red;
+			CurrentMagazineSize = MagazineSize;
+		}
+		private void FireBullets()
+		{
 			CurrentMagazineSize -= AmmoPerShot;
 			for (int i = 0; i < BulletCount; ++i)
 			{
@@ -67,16 +68,6 @@ namespace Assets.Scripts
 
 				Destroy(bullet, Duration);
 			}
-		}
-		protected virtual void ReloadWeapon()
-		{
-			_NextAllowedToFire = Time.time + ReloadTimeInMilliseconds / 1000.0f;
-			CurrentMagazineSize = MagazineSize;
-			_CurrentAmmoText.color = Color.red;
-		}
-		protected override void UpdateWithRuntimeMetadata(WeaponRuntimeMetadata metadata)
-		{
-			CurrentMagazineSize = metadata.CurrentMagazineAmmo;
 		}
 	}
 }

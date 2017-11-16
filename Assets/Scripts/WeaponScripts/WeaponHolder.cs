@@ -11,6 +11,7 @@ namespace Assets.Scripts.WeaponScripts
 		private const int SIZE = 4;
 		public GameObject[] Weapons = new GameObject[SIZE];
 
+		private GameObject[] RuntimeWeapons = new GameObject[SIZE];
 		private int _CurIndex;
 
 		protected virtual void OnValidate()
@@ -63,16 +64,30 @@ namespace Assets.Scripts.WeaponScripts
 			//Also update their stored metadata, so when switched back they will have the same info
 			for (int i = 0; i < this.transform.childCount; ++i)
 			{
-				var childWeapon = this.transform.GetChild(i)?.GetComponent<Weapon>();
-				if (childWeapon)
-				{
-					childWeapon.SaveRuntimeMetadata();
-					Destroy(childWeapon.gameObject);
-				}
+				this.transform.GetChild(i)?.GetComponent<Weapon>()?.HideWeapon();
 			}
 
 			_CurIndex = index;
-			Weapons[_CurIndex].GetComponent<Weapon>().Copy(this.transform);
+			var curWep = Weapons[_CurIndex]?.GetComponent<Weapon>();
+			if (!curWep)
+			{
+				Debug.Log($"Attempted to access a weapon which did not exist at {_CurIndex}");
+				return;
+			}
+
+			var curRuntimeWep = RuntimeWeapons[_CurIndex]?.GetComponent<Weapon>();
+			if (curRuntimeWep?.RuntimeGuid != curWep?.RuntimeGuid)
+			{
+				GameObject child;
+				if (curWep.TryCreate(this.transform, out child))
+				{
+					RuntimeWeapons[_CurIndex] = child;
+				}
+			}
+			else
+			{
+				curRuntimeWep.GetComponent<Weapon>().UnhideWeapon();
+			}
 		}
 	}
 }
