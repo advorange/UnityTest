@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.HelperClasses;
+using Assets.Scripts.WeaponScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,17 +25,17 @@ namespace Assets.Scripts
 
 		private void Awake()
 		{
-			CurrentMagazineSize = MagazineSize;
+			this.CurrentMagazineSize = this.MagazineSize;
 		}
 		private void Start()
 		{
-			_CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Tags.Ammo).GetComponent<Text>();
-			_MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Tags.Magazine).GetComponent<Text>();
+			this._CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Tags.Ammo).GetComponent<Text>();
+			this._MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Tags.Magazine).GetComponent<Text>();
 		}
 
 		protected override void UseWeapon()
 		{
-			if (CurrentMagazineSize <= 0)
+			if (this.CurrentMagazineSize <= 0)
 			{
 				ReloadWeapon();
 			}
@@ -45,28 +46,23 @@ namespace Assets.Scripts
 		}
 		protected override void UpdateUI()
 		{
-			_MagazineSizeText.text = MagazineSize.ToString();
-			_CurrentAmmoText.text = CurrentMagazineSize.ToString();
-			_CurrentAmmoText.color = Color.gray;
+			this._MagazineSizeText.text = this.MagazineSize.ToString();
+			this._CurrentAmmoText.text = this.CurrentMagazineSize.ToString();
+			this._CurrentAmmoText.color = Color.gray;
 		}
 		private void ReloadWeapon()
 		{
-			NextAllowedToAttack = Time.time + ReloadTimeInMilliseconds / 1000.0f;
-			_CurrentAmmoText.color = Color.red;
-			CurrentMagazineSize = MagazineSize;
+			this.NextAllowedToAttack = Time.time + this.ReloadTimeInMilliseconds / 1000.0f;
+			this._CurrentAmmoText.color = Color.red;
+			this.CurrentMagazineSize = this.MagazineSize;
 		}
 		private void FireBullets()
 		{
-			NextAllowedToAttack = Time.time + AttackRateInMilliseconds / 1000.0f;
-			CurrentMagazineSize -= AmmoPerShot;
-			for (int i = 0; i < BulletCount; ++i)
+			this.NextAllowedToAttack = Time.time + this.AttackRateInMilliseconds / 1000.0f;
+			this.CurrentMagazineSize -= this.AmmoPerShot;
+			for (int i = 0; i < this.BulletCount; ++i)
 			{
-				//Create bullet starting at the spawning bullet's position and rotation, give it a scale, then velocity, then destroy it
-				var bullet = Instantiate(BulletType, BulletSpawn.position, this.transform.parent.transform.rotation);
-				bullet.SetBulletVelocity(Accuracy, VelocityMultiplier);
-				bullet.transform.localScale = BulletScale;
-
-				Destroy(bullet, Duration);
+				BulletHelper.CreateBullet(this);
 			}
 		}
 	}

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.WeaponScripts;
+using Assets.Scripts.WeaponScripts.GunScripts.BulletScripts;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -6,6 +8,54 @@ namespace Assets.Scripts.HelperClasses
 {
 	public static class BulletHelper
 	{
+		public static GameObject CreateBullet(Gun gun)
+		{
+			var gunRotation = GetObjectHelper.GetPlayer().transform.rotation;
+			return CreateBullet
+			(
+				gun.BulletType, 
+				gun.BulletSpawn.position,
+				gunRotation, 
+				gun.BulletScale,
+				gun.Accuracy, 
+				gun.Damage, 
+				gun.Duration, 
+				gun.VelocityMultiplier
+			);
+		}
+		public static GameObject CreateBullet(GenerateMultipleBullets bullet)
+		{
+			//TODO: see why not generating extra bullets
+			var bulletRB = bullet.GetComponent<Rigidbody>();
+			var bulletDamager = bullet.GetComponent<Damager>();
+			var bulletRotation = Quaternion.LookRotation(bullet.Collision.contacts[0].normal);
+			return CreateBullet
+			(
+				bullet.BulletType,
+				bulletRB.position,
+				bulletRotation,
+				bullet.BulletScale,
+				bullet.Accuracy,
+				bulletDamager.Damage,
+				bullet.Duration,
+				bullet.VelocityMultiplier, bulletRB.velocity.magnitude
+			);
+		}
+		private static GameObject CreateBullet(GameObject bulletType, Vector3 spawnPosition, Quaternion rotation, Vector3 bulletScale,
+			float accuracy, float damage, float duration, params float[] velocityMultipliers)
+		{
+			//Create at position w/ rotation
+			var bullet = UnityEngine.Object.Instantiate(bulletType, spawnPosition, rotation);
+			//Give it speed
+			bullet.SetBulletVelocity(accuracy, velocityMultipliers);
+			//Give it the correct size
+			bullet.transform.localScale = bulletScale;
+			//Give it the damager component so when it strikes things it can pass damage
+			bullet.AddComponent<Damager>().SetDamageValue(damage);
+			//Destroy after the passed in time
+			UnityEngine.Object.Destroy(bullet, duration);
+			return bullet;
+		}
 		/// <summary>
 		/// Sets the <see cref="Rigidbody.velocity"/> of <paramref name="bullet"/> 
 		/// </summary>
@@ -30,6 +80,11 @@ namespace Assets.Scripts.HelperClasses
 			//Get the angle to bounce off at (basically supplementary angle) from the contact point
 			return Vector3.Reflect(velocity, collision.contacts[0].normal);
 		}
+		/// <summary>
+		/// Generates a random offset for bullets to appear from.
+		/// </summary>
+		/// <param name="accuracy"></param>
+		/// <returns></returns>
 		public static Vector3 GenerateVectorOffset(float accuracy)
 		{
 			//Only allow values between 0 and 100

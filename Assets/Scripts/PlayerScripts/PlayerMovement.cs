@@ -16,18 +16,19 @@ namespace Assets.Scripts.PlayerScripts
 			var controller = this.GetComponent<CharacterController>();
 			if (controller.isGrounded)
 			{
-				_MoveDirection = new Vector3(InputHelper.Horizontal, 0, InputHelper.Vertical);
-				_MoveDirection = transform.TransformDirection(_MoveDirection) * MovementSpeed;
+				this._MoveDirection = new Vector3(InputHelper.Horizontal(), 0, InputHelper.Vertical());
+				this._MoveDirection = this.transform.TransformDirection(this._MoveDirection) * this.MovementSpeed;
 				if (InputHelper.Jump)
 				{
-					_MoveDirection.y = JumpSpeed;
+					this._MoveDirection.y = this.JumpSpeed;
+					this._MoveDirection.x += .01f * this.MovementSpeed;
 				}
 			}
 			else
 			{
-				_MoveDirection.y -= FallSpeed * Time.deltaTime;
+				this._MoveDirection.y -= this.FallSpeed * Time.deltaTime;
 			}
-			controller.Move(_MoveDirection * Time.deltaTime);
+			controller.Move(this._MoveDirection * Time.deltaTime);
 		}
 	}
 }

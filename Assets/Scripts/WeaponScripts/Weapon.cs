@@ -14,24 +14,23 @@ namespace Assets.Scripts
 		public float Knockback = 1.0f;
 		public float AttackRateInMilliseconds = 100;
 
-		private static Type[] _DefaultComponentsToToggle = new[] { typeof(MeshRenderer) };
 		public float NextAllowedToAttack { get; protected set; }
 		public bool IsVisible { get; protected set; } = true;
-		public bool AllowedToUse => IsVisible && NextAllowedToAttack <= Time.time;
+		public bool AllowedToUse => this.IsVisible && this.NextAllowedToAttack <= Time.time;
 
 		/// <summary>
 		/// Base implementation calls <see cref="UpdateUI"/> and <see cref="UseWeapon"/> if <see cref="AllowedToUse"/> is true.
 		/// </summary>
 		protected virtual void Update()
 		{
-			if (AllowedToUse)
+			if (this.AllowedToUse)
 			{
 				UpdateUI();
 				UseWeapon();
 			}
 		}
-		protected abstract void UseWeapon();
 		protected abstract void UpdateUI();
+		protected abstract void UseWeapon();
 		/// <summary>
 		/// Creates a new <see cref="GameObject"/> from this and attaches it to <paramref name="parent"/>.
 		/// </summary>
@@ -56,43 +55,16 @@ namespace Assets.Scripts
 		/// Disables every type passed in which inherits from <see cref="Renderer"/>.
 		/// </summary>
 		/// <param name="componentsToTurnOff"></param>
-		public void HideWeapon(Type[] componentsToTurnOff = null) => ToggleComponents(componentsToTurnOff, false);
+		public void HideWeapon() => ToggleComponents(false);
 		/// <summary>
 		/// Disables every type passed in which inherits from <see cref="Renderer"/>.
 		/// </summary>
 		/// <param name="componentsToTurnOff"></param>
-		public void UnhideWeapon(Type[] componentsToTurnOff = null) => ToggleComponents(componentsToTurnOff, true);
-		private void ToggleComponents(Type[] components, bool value)
+		public void UnhideWeapon() => ToggleComponents(true);
+		private void ToggleComponents(bool value)
 		{
-			IsVisible = value;
-			foreach (var renderType in ReturnRendererTypes(components))
-			{
-				var component = this.GetComponent(renderType) as Renderer;
-				if (component)
-				{
-					component.enabled = value;
-				}
-			}
-		}
-		private IEnumerable<Type> ReturnRendererTypes(IEnumerable<Type> inputTypes)
-		{
-			var types = inputTypes ?? _DefaultComponentsToToggle;
-			if (!types.Any())
-			{
-				Debug.Log("An empty array was passed in to hide or unhide a weapon. This has no effect; was this intentional?");
-			}
-
-			foreach (var type in types)
-			{
-				if (typeof(Renderer).IsAssignableFrom(type))
-				{
-					yield return type;
-				}
-				else
-				{
-					Debug.Log($"{type.Name} is not a {nameof(Renderer)} type and cannot be used to hide or unhide a weapon.");
-				}
-			}
+			this.IsVisible = value;
+			GetObjectHelper.ToggleComponents(this.gameObject, new[] { typeof(MeshRenderer) }, value);
 		}
 	}
 }

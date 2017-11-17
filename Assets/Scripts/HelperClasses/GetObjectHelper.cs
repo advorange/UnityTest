@@ -29,9 +29,21 @@ namespace Assets.Scripts.HelperClasses
 
 		public static IEnumerable<WeaponCollisionEffect> GetCollisionEffects(this WeaponCollisionEffect[] effects, WeaponEffectTargets targets)
 		{
-			foreach (var bce in effects.Where(x => x.Targets.HasFlag(targets)))
+			//0 indicates nothing ever triggers
+			//
+			foreach (var bce in effects.Where(x => (x.Targets & targets) != 0))
 			{
 				yield return bce;
+			}
+		}
+
+		public static void ToggleComponents(GameObject gameObject, Type[] componentTypes, bool value)
+		{
+			foreach (var componentType in componentTypes)
+			{
+				var components = gameObject.GetComponents(componentType);
+				components.OfType<Renderer>().ToList().ForEach(x => x.enabled = value);
+				components.OfType<Collider>().ToList().ForEach(x => x.enabled = value);
 			}
 		}
 	}
