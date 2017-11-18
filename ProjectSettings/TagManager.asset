@@ -8,6 +8,7 @@ TagManager:
   - MagazineSize
   - Bullet
   - Gun
+  - FPS
   layers:
   - Default
   - TransparentFX
