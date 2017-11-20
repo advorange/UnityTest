@@ -10,7 +10,7 @@ namespace Assets.Scripts.EditorBitMask
 		{
 			//Add the actual int value behind the field name
 			label.text = $"{label.text} ({prop.intValue})";
-			prop.intValue = EditorExtension.DrawBitMaskField(position, prop.intValue, ((BitMaskAttribute)attribute).propType, label);
+			prop.intValue = EditorExtension.DrawBitMaskField(position, prop.intValue, ((BitMaskAttribute)this.attribute).propType, label);
 		}
 	}
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 {
-	public class GenerateMultipleBullets : WeaponCollisionEffect
+	public class GenerateBullets : WeaponCollisionEffect
 	{
 		public float Duration = 1.0f;
 		public float Accuracy = 50.0f;
@@ -16,10 +16,10 @@ namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 
 		protected virtual void Start()
 		{
-			if (this.BulletType.GetComponent<GenerateMultipleBullets>())
+			if (this.BulletType.GetComponent<GenerateBullets>())
 			{
 				UnityEditor.EditorApplication.isPlaying = false;
-				throw new ArgumentException($"Don't use the a {nameof(GenerateMultipleBullets)} for {nameof(this.BulletType)}.");
+				throw new ArgumentException($"Don't use the a {nameof(GenerateBullets)} for {nameof(this.BulletType)}.");
 			}
 		}
 

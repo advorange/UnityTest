@@ -169,15 +169,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Pistol
   Damage: 10
-  Knockback: 1
+  Knockback: 2
   AttackRateInMilliseconds: 100
   Duration: 2
-  Accuracy: 90
+  Accuracy: 80
   ReloadTimeInMilliseconds: 1000
   VelocityMultiplier: 20
   BulletCount: 1
   AmmoPerShot: 1
-  MagazineSize: 10
+  MagazineSize: 15
   BulletType: {fileID: 1890688220274458, guid: 8f74854502401d34aad1ee485ac7dc59, type: 2}
   BulletSpawn: {fileID: 4287606852717346}
   BulletSkin: {fileID: 2100000, guid: 1e1ea1a47112ba945a692224e3664b26, type: 2}

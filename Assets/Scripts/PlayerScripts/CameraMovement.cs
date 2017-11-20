@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.HelperClasses;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.PlayerScripts
@@ -9,21 +10,22 @@ namespace Assets.Scripts.PlayerScripts
 		public Vector3 Offset = new Vector3(0, 1, -5);
 		public Transform Player;
 
-		private void Start()
+		private void Awake()
 		{
-			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 		private void Update()
 		{
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
-				Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+				Cursor.visible = !Cursor.visible;
+				Cursor.lockState = Cursor.visible ? CursorLockMode.None : CursorLockMode.Locked;
 			}
 			if (!InputHelper.MouseX().Equals(0.0f))
 			{
 				var x = InputHelper.MouseX() * Time.deltaTime * this.MoveSpeed * (Screen.currentResolution.width / 500.0f);
-				this.Player.rotation = CreateNewRotation(this.Player.rotation.eulerAngles, x);
+				this.Player.rotation = CreateNewRotation(this.Player.rotation.eulerAngles, x, 1);
 			}
 			/*if (!InputHelper.MouseY().Equals(0.0f))
 			{
@@ -35,7 +37,7 @@ namespace Assets.Scripts.PlayerScripts
 			this.transform.position = this.Player.position + (this.Player.rotation * this.Offset);
 			this.transform.rotation = this.Player.rotation;
 		}
-		private Quaternion CreateNewRotation(Vector3 euler, float val, int index = 1)
+		private Quaternion CreateNewRotation(Vector3 euler, float val, int index)
 		{
 			var v = new Vector3();
 			for (int i = 0; i < 3; ++i)

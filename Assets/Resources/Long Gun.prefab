@@ -167,21 +167,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4332dc9574edd149935b35220205070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Pistol
-  Damage: 10
-  Knockback: 1
-  AttackRateInMilliseconds: 100
+  Name: Rifle
+  Damage: 25
+  Knockback: 5
+  AttackRateInMilliseconds: 250
   Duration: 2
-  Accuracy: 90
-  ReloadTimeInMilliseconds: 1000
-  VelocityMultiplier: 20
+  Accuracy: 95
+  ReloadTimeInMilliseconds: 2000
+  VelocityMultiplier: 15
   BulletCount: 1
   AmmoPerShot: 1
-  MagazineSize: 10
+  MagazineSize: 7
   BulletType: {fileID: 1538611936567934, guid: fabf139cc19900e4da765afbafb632a5, type: 2}
   BulletSpawn: {fileID: 4871630801016224}
   BulletSkin: {fileID: 2100000, guid: 1e1ea1a47112ba945a692224e3664b26, type: 2}
-  BulletScale: {x: 0.125, y: 0.125, z: 0.125}
+  BulletScale: {x: 0.2, y: 0.2, z: 0.2}
 --- !u!135 &135115202018671832
 SphereCollider:
   m_ObjectHideFlags: 1

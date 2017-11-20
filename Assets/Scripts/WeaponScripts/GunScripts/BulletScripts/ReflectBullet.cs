@@ -12,17 +12,17 @@ namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 
 		protected virtual void Start()
 		{
-			_RigidBody = this.GetComponent<Rigidbody>();
+			this._RigidBody = this.GetComponent<Rigidbody>();
 		}
 		protected virtual void Update()
 		{
-			_LastFrameVelocity = _RigidBody.velocity;
+			this._LastFrameVelocity = this._RigidBody.velocity;
 		}
 
 		public override void InvokeEffects(Collision collision)
 		{
 			//Shoot the bullet back out in that direction with an updated magnitude
-			_RigidBody.velocity = _LastFrameVelocity.Reflect(collision) * VelocityMultiplier;
+			this._RigidBody.velocity = this._LastFrameVelocity.Reflect(collision) * this.VelocityMultiplier;
 		}
 	}
 }

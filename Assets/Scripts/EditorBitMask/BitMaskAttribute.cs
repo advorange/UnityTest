@@ -9,7 +9,7 @@ namespace Assets.Scripts.EditorBitMask
 
 		public BitMaskAttribute(Type aType)
 		{
-			propType = aType;
+			this.propType = aType;
 		}
 	}
 }

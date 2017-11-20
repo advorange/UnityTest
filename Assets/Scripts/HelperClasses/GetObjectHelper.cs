@@ -8,12 +8,12 @@ namespace Assets.Scripts.HelperClasses
 {
 	public static class GetObjectHelper
 	{
-		public static GameObject GetPlayer() => FindGameObjectWithTag(Tags.Player);
-		public static GameObject FindGameObjectWithTag(string tag)
+		public static GameObject[] GetPlayers() => FindGameObjectsWithTag(Tags.Player);
+		public static GameObject[] FindGameObjectsWithTag(string tag)
 		{
 			try
 			{
-				return GameObject.FindGameObjectWithTag(tag);
+				return GameObject.FindGameObjectsWithTag(tag);
 			}
 			catch (Exception e)
 			{
@@ -29,8 +29,6 @@ namespace Assets.Scripts.HelperClasses
 
 		public static IEnumerable<WeaponCollisionEffect> GetCollisionEffects(this WeaponCollisionEffect[] effects, WeaponEffectTargets targets)
 		{
-			//0 indicates nothing ever triggers
-			//
 			foreach (var bce in effects.Where(x => (x.Targets & targets) != 0))
 			{
 				yield return bce;

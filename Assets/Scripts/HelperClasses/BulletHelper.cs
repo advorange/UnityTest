@@ -10,7 +10,7 @@ namespace Assets.Scripts.HelperClasses
 	{
 		public static GameObject CreateBullet(Gun gun)
 		{
-			var gunRotation = GetObjectHelper.GetPlayer().transform.rotation;
+			var gunRotation = gun.transform.parent.transform.rotation;
 			return CreateBullet
 			(
 				gun.BulletType, 
@@ -23,7 +23,7 @@ namespace Assets.Scripts.HelperClasses
 				gun.VelocityMultiplier
 			);
 		}
-		public static GameObject CreateBullet(GenerateMultipleBullets bullet)
+		public static GameObject CreateBullet(GenerateBullets bullet)
 		{
 			//TODO: see why not generating extra bullets
 			var bulletRB = bullet.GetComponent<Rigidbody>();

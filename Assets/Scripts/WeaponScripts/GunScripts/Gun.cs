@@ -29,8 +29,8 @@ namespace Assets.Scripts
 		}
 		private void Start()
 		{
-			this._CurrentAmmoText = GetObjectHelper.FindGameObjectWithTag(Tags.Ammo).GetComponent<Text>();
-			this._MagazineSizeText = GetObjectHelper.FindGameObjectWithTag(Tags.Magazine).GetComponent<Text>();
+			this._CurrentAmmoText = GetObjectHelper.FindGameObjectsWithTag(Tags.Ammo)[0].GetComponent<Text>();
+			this._MagazineSizeText = GetObjectHelper.FindGameObjectsWithTag(Tags.Magazine)[0].GetComponent<Text>();
 		}
 
 		protected override void UseWeapon()
