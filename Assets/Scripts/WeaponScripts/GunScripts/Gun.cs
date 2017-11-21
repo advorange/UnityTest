@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.HelperClasses;
-using Assets.Scripts.WeaponScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,14 +22,12 @@ namespace Assets.Scripts
 		private Text _CurrentAmmoText;
 		private Text _MagazineSizeText;
 
-		private void Awake()
+		protected override void Start()
 		{
+			base.Start();
 			this.CurrentMagazineSize = this.MagazineSize;
-		}
-		private void Start()
-		{
-			this._CurrentAmmoText = GetObjectHelper.FindGameObjectsWithTag(Tags.Ammo)[0].GetComponent<Text>();
-			this._MagazineSizeText = GetObjectHelper.FindGameObjectsWithTag(Tags.Magazine)[0].GetComponent<Text>();
+			this._CurrentAmmoText = Tags.FindGameObjectsWithTag(Tags.CurrentAmmo)[0].GetComponent<Text>();
+			this._MagazineSizeText = Tags.FindGameObjectsWithTag(Tags.MagazineSize)[0].GetComponent<Text>();
 		}
 
 		protected override void UseWeapon()

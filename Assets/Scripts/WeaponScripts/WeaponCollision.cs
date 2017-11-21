@@ -17,7 +17,7 @@ namespace Assets.Scripts.WeaponScripts
 		{
 			foreach (var tag in this.IgnoredTags)
 			{
-				if (!String.IsNullOrWhiteSpace(tag) && !GetObjectHelper.DoesTagExist(tag))
+				if (!String.IsNullOrWhiteSpace(tag) && !Tags.DoesTagExist(tag))
 				{
 					Debug.LogWarning($"The tag {tag} is not valid to ignore since it is not explicitly stated in the {nameof(Tags)} class.");
 				}

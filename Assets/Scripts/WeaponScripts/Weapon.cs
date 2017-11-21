@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.HelperClasses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,14 +9,19 @@ namespace Assets.Scripts
 	{
 		public string RuntimeGuid { get; protected set; } = Guid.NewGuid().ToString();
 		public string Name;
-		public int Damage = 10;
 		public float Knockback = 1.0f;
 		public float AttackRateInMilliseconds = 100;
+		public int Damage = 10;
 
+		public GameObject Player { get; protected set; }
 		public float NextAllowedToAttack { get; protected set; }
 		public bool IsVisible { get; protected set; } = true;
 		public bool AllowedToUse => this.IsVisible && this.NextAllowedToAttack <= Time.time;
 
+		protected virtual void Start()
+		{
+			this.Player = this.transform.parent.gameObject;
+		}
 		/// <summary>
 		/// Base implementation calls <see cref="UpdateUI"/> and <see cref="UseWeapon"/> if <see cref="AllowedToUse"/> is true.
 		/// </summary>

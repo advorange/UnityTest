@@ -13,6 +13,7 @@ namespace Assets.Scripts.HelperClasses
 			var gunRotation = gun.transform.parent.transform.rotation;
 			return CreateBullet
 			(
+				gun.Player,
 				gun.BulletType, 
 				gun.BulletSpawn.position,
 				gunRotation, 
@@ -31,6 +32,7 @@ namespace Assets.Scripts.HelperClasses
 			var bulletRotation = Quaternion.LookRotation(bullet.Collision.contacts[0].normal);
 			return CreateBullet
 			(
+				bulletDamager.Player,
 				bullet.BulletType,
 				bulletRB.position,
 				bulletRotation,
@@ -41,7 +43,7 @@ namespace Assets.Scripts.HelperClasses
 				bullet.VelocityMultiplier, bulletRB.velocity.magnitude
 			);
 		}
-		private static GameObject CreateBullet(GameObject bulletType, Vector3 spawnPosition, Quaternion rotation, Vector3 bulletScale,
+		private static GameObject CreateBullet(GameObject player, GameObject bulletType, Vector3 spawnPosition, Quaternion rotation, Vector3 bulletScale,
 			float accuracy, float damage, float duration, params float[] velocityMultipliers)
 		{
 			//Create at position w/ rotation
@@ -51,7 +53,9 @@ namespace Assets.Scripts.HelperClasses
 			//Give it the correct size
 			bullet.transform.localScale = bulletScale;
 			//Give it the damager component so when it strikes things it can pass damage
-			bullet.AddComponent<Damager>().SetDamageValue(damage);
+			var damager = bullet.AddComponent<Damager>();
+			damager.Damage = damage;
+			damager.Player = player;
 			//Destroy after the passed in time
 			UnityEngine.Object.Destroy(bullet, duration);
 			return bullet;

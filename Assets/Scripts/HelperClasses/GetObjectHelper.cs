@@ -8,24 +8,7 @@ namespace Assets.Scripts.HelperClasses
 {
 	public static class GetObjectHelper
 	{
-		public static GameObject[] GetPlayers() => FindGameObjectsWithTag(Tags.Player);
-		public static GameObject[] FindGameObjectsWithTag(string tag)
-		{
-			try
-			{
-				return GameObject.FindGameObjectsWithTag(tag);
-			}
-			catch (Exception e)
-			{
-				Debug.LogException(e);
-				UnityEditor.EditorApplication.isPlaying = false;
-				return null;
-			}
-		}
-		public static bool DoesTagExist(string tag)
-		{
-			return Tags.AssetTags.Contains(tag);
-		}
+		public static GameObject[] GetPlayers() => Tags.FindGameObjectsWithTag(Tags.Player);
 
 		public static IEnumerable<WeaponCollisionEffect> GetCollisionEffects(this WeaponCollisionEffect[] effects, WeaponEffectTargets targets)
 		{

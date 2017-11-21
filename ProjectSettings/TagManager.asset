@@ -9,6 +9,9 @@ TagManager:
   - Bullet
   - Gun
   - FPS
+  - Pause
+  - Enemy
+  - PercentLoaded
   layers:
   - Default
   - TransparentFX
