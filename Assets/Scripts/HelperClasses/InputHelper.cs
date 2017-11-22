@@ -11,6 +11,7 @@ namespace Assets.Scripts.HelperClasses
 		public static float MouseY(bool raw = false) => GetAxis("Mouse Y", raw);
 
 		public static bool Jump => Input.GetButton("Jump");
+		public static bool Interact => Input.GetKeyUp(GlobalVariables.InteractKey);
 
 		private static float GetAxis(string name, bool raw)
 		{

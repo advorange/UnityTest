@@ -18,8 +18,8 @@ namespace Assets.Scripts.WeaponScripts.GunScripts.BulletScripts
 		{
 			if (this.BulletType.GetComponent<GenerateBullets>())
 			{
-				UnityEditor.EditorApplication.isPlaying = false;
-				throw new ArgumentException($"Don't use the a {nameof(GenerateBullets)} for {nameof(this.BulletType)}.");
+				Debug.LogException(new ArgumentException($"Don't use the a {nameof(GenerateBullets)} for {nameof(this.BulletType)}."));
+				Application.Quit();
 			}
 		}
 

@@ -26,8 +26,9 @@ namespace Assets.Scripts
 		{
 			base.Start();
 			this.CurrentMagazineSize = this.MagazineSize;
-			this._CurrentAmmoText = Tags.FindGameObjectsWithTag(Tags.CurrentAmmo)[0].GetComponent<Text>();
-			this._MagazineSizeText = Tags.FindGameObjectsWithTag(Tags.MagazineSize)[0].GetComponent<Text>();
+			var parent = this.gameObject.transform.parent.gameObject;
+			this._CurrentAmmoText = Tags.FindChildrenWithTag(parent, Tags.CurrentAmmo)[0].GetComponent<Text>();
+			this._MagazineSizeText = Tags.FindChildrenWithTag(parent, Tags.MagazineSize)[0].GetComponent<Text>();
 		}
 
 		protected override void UseWeapon()

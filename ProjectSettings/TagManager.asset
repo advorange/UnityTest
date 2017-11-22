@@ -12,6 +12,8 @@ TagManager:
   - Pause
   - Enemy
   - PercentLoaded
+  - Spawn
+  - Interaction
   layers:
   - Default
   - TransparentFX

@@ -1,94 +1,59 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.PlayerScripts;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.HelperClasses
 {
-	public class SceneSwitcher : MonoBehaviour
+	public class SceneSwitcher : Interactable
 	{
 		public string SceneName;
-		public Vector3 Spawn;
-
-		private static Scene _LoadingScene;
-		private static Text _PercentLoadedText;
 
 		private float _PercentLoaded;
-		private float _PercentUnloaded;
+		private bool _LoadFinished;
 		private bool _BusyLoading;
-		private bool _BusyUnloading;
-		private bool _CurrentlySwitching => this._BusyLoading || this._BusyUnloading;
 
 		private void OnValidate()
 		{
+			this.Text = $"go to {this.SceneName}";
 			if (!Scenes.DoesSceneExist(this.SceneName))
 			{
 				Debug.LogWarning($"{this.SceneName} is not a valid scene name.");
 			}
 		}
-		private void Start()
-		{
-			if (_LoadingScene == default(Scene))
-			{
-				//StartCoroutine(LoadLoadingScene());
-			}
-		}
 		private void Update()
 		{
-			if (this._CurrentlySwitching)
+			if (this._BusyLoading)
 			{
-				var minPercent = Mathf.Min(this._PercentLoaded, this._PercentUnloaded);
-				_PercentLoadedText.text = $"{minPercent}% LOADED";
+				Debug.Log($"{this._PercentLoaded}% LOADED");
 			}
-			else if (this._PercentLoaded >= 100.0f && this._PercentUnloaded >= 100.0f)
+			else if (this._LoadFinished)
 			{
 				SceneManager.SetActiveScene(Scenes.GetSceneByName(this.SceneName));
 				this._PercentLoaded = 0.0f;
-				this._PercentUnloaded = 0.0f;
+				this._LoadFinished = false;
 			}
 		}
-		private void OnCollisionEnter(Collision collision)
+		public override void Interact()
 		{
-			if (!this._CurrentlySwitching/* && collision.gameObject.tag == Tags.Player*/)
+			if (!this._BusyLoading)
 			{
-				StartCoroutine(LoadLoadingScene());
 				StartCoroutine(LoadScene(this.SceneName));
-				StartCoroutine(UnloadCurrentScene(SceneManager.GetActiveScene().path));
-				SceneManager.SetActiveScene(_LoadingScene);
 			}
 		}
 		private IEnumerator LoadScene(string path)
 		{
 			this._BusyLoading = true;
-			var asyncOp = SceneManager.LoadSceneAsync(path);
+			var asyncOp = SceneManager.LoadSceneAsync(path, LoadSceneMode.Single);
 			while (!asyncOp.isDone)
 			{
 				this._PercentLoaded = asyncOp.progress * 100.0f;
 				yield return null;
 			}
 			this._BusyLoading = false;
+			this._LoadFinished = true;
 			this._PercentLoaded = 100.0f;
-		}
-		private IEnumerator UnloadCurrentScene(string path)
-		{
-			this._BusyUnloading = true;
-			var asyncOp = SceneManager.UnloadSceneAsync(path);
-			while (!asyncOp.isDone)
-			{
-				this._PercentUnloaded = asyncOp.progress * 100.0f;
-				yield return null;
-			}
-			this._BusyUnloading = false;
-			this._PercentUnloaded = 100.0f;
-		}
-		private IEnumerator LoadLoadingScene()
-		{
-			var loading = SceneManager.LoadSceneAsync(Scenes.Loading, LoadSceneMode.Additive);
-			yield return loading;
-			_LoadingScene = Scenes.GetSceneByName(Scenes.Loading);
-			_PercentLoadedText = Tags.FindGameObjectsWithTag(Tags.PercentLoaded)[0].GetComponent<Text>();
-			//SceneManager.SetActiveScene(Scenes.GetSceneByName(Scenes.Test));
 		}
 	}
 }

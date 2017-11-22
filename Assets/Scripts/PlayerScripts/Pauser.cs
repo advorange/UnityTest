@@ -15,7 +15,7 @@ namespace Assets.Scripts.PlayerScripts
 		}
 		private void Start()
 		{
-			foreach (var obj in Tags.FindGameObjectsWithTag(Tags.Pause))
+			foreach (var obj in Tags.FindChildrenWithTag(this.gameObject, Tags.Pause))
 			{
 				var canvas = obj.GetComponent<Canvas>();
 				if (canvas)

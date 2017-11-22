@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -26,6 +27,8 @@ namespace Assets.Scripts.HelperClasses
 		public static readonly string Pause = nameof(Pause);
 		public static readonly string Enemy = nameof(Enemy);
 		public static readonly string PercentLoaded = nameof(PercentLoaded);
+		public static readonly string Spawn = nameof(Spawn);
+		public static readonly string Interaction = nameof(Interaction);
 
 		private static ReadOnlyCollection<string> CreateAssetTagList()
 		{
@@ -36,19 +39,28 @@ namespace Assets.Scripts.HelperClasses
 				.Where(x => !String.IsNullOrWhiteSpace(x))
 				.ToList().AsReadOnly();
 		}
-
-		public static GameObject[] FindGameObjectsWithTag(string tag)
+		public static Transform[] FindChildrenWithTag(GameObject parent, string tag)
 		{
 			try
 			{
-				return GameObject.FindGameObjectsWithTag(tag);
+				var allChildren = parent.GetComponentsInChildren<Transform>().Where(x => x.gameObject != parent);
+				return allChildren.Where(x => x.tag == tag).ToArray();
 			}
 			catch (Exception e)
 			{
 				Debug.LogException(e);
-				UnityEditor.EditorApplication.isPlaying = false;
-				return null;
+				Application.Quit();
+				return Array.Empty<Transform>();
 			}
+		}
+		private static IEnumerable<Transform> GetAllChildren(Transform parent)
+		{
+			var children = new List<Transform>();
+			foreach (Transform child in parent.GetComponent<Transform>())
+			{
+				children.AddRange(GetAllChildren(child));
+			}
+			return children;
 		}
 		public static bool DoesTagExist(string tag)
 		{

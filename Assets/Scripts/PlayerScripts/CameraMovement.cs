@@ -5,9 +5,9 @@ namespace Assets.Scripts.PlayerScripts
 {
 	public class CameraMovement : MonoBehaviour
 	{
+		public Transform Player;
 		public float MoveSpeed = 10.0f;
 		public Vector3 Offset = new Vector3(0, 1, -5);
-		public Transform Player;
 
 		private void Update()
 		{

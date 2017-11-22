@@ -35,7 +35,7 @@ namespace Assets.Scripts.HelperClasses
 			catch (Exception e)
 			{
 				Debug.LogException(e);
-				UnityEditor.EditorApplication.isPlaying = false;
+				Application.Quit();
 				return default(Scene);
 			}
 		}
