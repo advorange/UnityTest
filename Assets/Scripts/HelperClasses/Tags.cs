@@ -26,9 +26,9 @@ namespace Assets.Scripts.HelperClasses
 		public static readonly string FPS = nameof(FPS);
 		public static readonly string Pause = nameof(Pause);
 		public static readonly string Enemy = nameof(Enemy);
-		public static readonly string PercentLoaded = nameof(PercentLoaded);
 		public static readonly string Spawn = nameof(Spawn);
 		public static readonly string Interaction = nameof(Interaction);
+		public static readonly string Loading = nameof(Loading);
 
 		private static ReadOnlyCollection<string> CreateAssetTagList()
 		{

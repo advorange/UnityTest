@@ -11,9 +11,9 @@ TagManager:
   - FPS
   - Pause
   - Enemy
-  - PercentLoaded
   - Spawn
   - Interaction
+  - Loading
   layers:
   - Default
   - TransparentFX

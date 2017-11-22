@@ -6,6 +6,7 @@ namespace Assets.Scripts
 	{
 		public string Text;
 
+		//TODO: have this be shown based on trigger area and not raycast
 		public abstract void Interact();
 	}
 }

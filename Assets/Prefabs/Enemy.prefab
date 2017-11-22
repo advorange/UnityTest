@@ -101,6 +101,10 @@ MonoBehaviour:
   DestroySequence: {fileID: 114812631962937114}
   FocusTime: 30
   AggroDistance: 30
+  Damage: 10
+  UserSwitchDamageMultiplier: 1.05
+  UserSwitchSpeedMultiplier: 1.1
+  UserSwitchBuffSeconds: 2
   Attack: {fileID: 0}
 --- !u!114 &114812631962937114
 MonoBehaviour:
