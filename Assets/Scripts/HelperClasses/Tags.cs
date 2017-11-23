@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.HelperClasses
 {
@@ -39,18 +40,33 @@ namespace Assets.Scripts.HelperClasses
 				.Where(x => !String.IsNullOrWhiteSpace(x))
 				.ToList().AsReadOnly();
 		}
-		public static Transform[] FindChildrenWithTag(GameObject parent, string tag)
+		public static GameObject[] FindChildrenWithTag(Scene scene, string tag)
 		{
 			try
 			{
-				var allChildren = parent.GetComponentsInChildren<Transform>().Where(x => x.gameObject != parent);
-				return allChildren.Where(x => x.tag == tag).ToArray();
+				var rootGameObjects = scene.GetRootGameObjects();
+				var allChildren = rootGameObjects.SelectMany(x => x.GetComponentsInChildren<Transform>().Select(y => y.gameObject));
+				return rootGameObjects.Concat(allChildren).Where(x => x.tag == tag).Distinct().ToArray();
 			}
 			catch (Exception e)
 			{
 				Debug.LogException(e);
 				Application.Quit();
-				return Array.Empty<Transform>();
+				return Array.Empty<GameObject>();
+			}
+		}
+		public static GameObject[] FindChildrenWithTag(GameObject parent, string tag)
+		{
+			try
+			{
+				var allChildren = parent.GetComponentsInChildren<Transform>().Where(x => x.gameObject != parent);
+				return allChildren.Where(x => x.tag == tag).Select(x => x.gameObject).ToArray();
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				Application.Quit();
+				return Array.Empty<GameObject>();
 			}
 		}
 		private static IEnumerable<Transform> GetAllChildren(Transform parent)

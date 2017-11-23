@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.EditorBitMask;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.WeaponScripts
 {

@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.HelperClasses;
 using Assets.Scripts.WeaponScripts.CollisionInteractionScripts;
-using System;
 using System.Linq;
 using UnityEngine;
 
@@ -9,20 +8,11 @@ namespace Assets.Scripts.WeaponScripts
 	public class WeaponCollision : MonoBehaviour
 	{
 		private static string[] _GlobalIgnoredTags = new[] { Tags.Bullet };
+		[ReadOnly]
 		public string[] IgnoredTags;
+
 		private WeaponCollisionEffect[] _Effects;
 		private Collider _Collider;
-
-		private void OnValidate()
-		{
-			foreach (var tag in this.IgnoredTags)
-			{
-				if (!String.IsNullOrWhiteSpace(tag) && !Tags.DoesTagExist(tag))
-				{
-					Debug.LogWarning($"The tag {tag} is not valid to ignore since it is not explicitly stated in the {nameof(Tags)} class.");
-				}
-			}
-		}
 
 		protected virtual void Start()
 		{

@@ -6,10 +6,11 @@ namespace Assets.Scripts
 {
 	public class Gun : Weapon
 	{
-		public float Duration = 2.0f;
 		public float Accuracy = 90.0f;
-		public float ReloadTimeInMilliseconds = 1000;
-		public int VelocityMultiplier = 20;
+		public float ReloadTimeInMilliseconds = 1000.0f;
+		[Header("Bullet")]
+		public float VelocityMultiplier = 20.0f;
+		public float Duration = 2.0f;
 		public int BulletCount = 1;
 		public int AmmoPerShot = 1;
 		public int MagazineSize = 10;

@@ -47,7 +47,7 @@ namespace Assets.Scripts.PlayerScripts
 		private void SceneLoaded(Scene scene, LoadSceneMode mode)
 		{
 			//Only use the most recently created spawn
-			this._Spawn = GameObject.FindGameObjectsWithTag(Tags.Spawn).Last().GetComponent<Transform>();
+			this._Spawn = Tags.FindChildrenWithTag(scene, Tags.Spawn).Last().GetComponent<Transform>();
 			//If no spawn point then just leave the default transform's position
 			this.transform.position = this._Spawn?.position ?? this.transform.position;
 			this.transform.rotation = this._Spawn?.rotation ?? this.transform.rotation;

@@ -1,7 +1,4 @@
-﻿using Assets.Scripts.PlayerScripts;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,18 +7,22 @@ namespace Assets.Scripts.HelperClasses
 {
 	public class SceneSwitcher : Interactable
 	{
+		[ReadOnly]
 		public string SceneName;
+		public bool UnloadThisScene = true;
+		public bool TieTextToSceneName = true;
 
 		private bool _BusyLoading;
+		private Scene _LoadingScene;
+		private Canvas _LoadingCanvas;
+		private Slider _LoadingSlider;
+		private Text _LoadingText;
 
-		private void OnValidate()
+		private void Awake()
 		{
-			this.Text = $"go to {this.SceneName}";
-			if (!Scenes.DoesSceneExist(this.SceneName))
-			{
-				Debug.LogWarning($"{this.SceneName} is not a valid scene name.");
-			}
+			StartCoroutine(GetOrCreateLoadingScene());
 		}
+
 		public override void Interact()
 		{
 			if (!this._BusyLoading)
@@ -29,43 +30,72 @@ namespace Assets.Scripts.HelperClasses
 				StartCoroutine(LoadScene(this.SceneName));
 			}
 		}
-		private IEnumerator LoadScene(string path)
+		private IEnumerator GetOrCreateLoadingScene()
 		{
 			this._BusyLoading = true;
-
-			//Start displaying the loading scene
-			//Additive because only gets shown on top and the new scene deletes everything anyways
-			var loadingSceneOp = SceneManager.LoadSceneAsync(Scenes.Loading, LoadSceneMode.Additive);
-			while (!loadingSceneOp.isDone)
+			this._LoadingScene = SceneManager.GetSceneByName(Scenes.Loading);
+			if (this._LoadingScene == default(Scene))
 			{
-				yield return null;
+				//Additive so it doesn't delete anything
+				var loadingSceneOp = SceneManager.LoadSceneAsync(Scenes.Loading, LoadSceneMode.Additive);
+				while (!loadingSceneOp.isDone)
+				{
+					yield return null;
+				}
+				this._LoadingScene = SceneManager.GetSceneByName(Scenes.Loading);
 			}
-			//yield return null here so that the scene is loaded otherwise getting objects returns null
 			var loading = GameObject.FindGameObjectWithTag(Tags.Loading);
-			var slider = loading.GetComponent<Slider>();
-			var text = loading.GetComponentInChildren<Text>();
+			this._LoadingCanvas = loading.GetComponentInChildren<Canvas>();
+			this._LoadingSlider = loading.GetComponentInChildren<Slider>();
+			this._LoadingText = loading.GetComponentInChildren<Text>();
 
-			//Single because the previous scenes are unimportant
-			//I guess it would be nice to maybe cache the loading scene, but I don't know how
-			var newSceneOp = SceneManager.LoadSceneAsync(path, LoadSceneMode.Single);
-			//Don't want it to be shown too quickly
+			//Hide the scene
+			this._LoadingCanvas.enabled = false;
+			this._BusyLoading = false;
+		}
+		private IEnumerator LoadScene(string path)
+		{
+			//Start displaying the loading scene
+			this._BusyLoading = true;
+			this._LoadingCanvas.enabled = true;
+
+			//Don't want the new scene to be shown too quickly
+			//Additive in case the old scene needs to be kept around
+			//Also so loading scene doesn't get deleted each time
+			var newSceneOp = SceneManager.LoadSceneAsync(path, LoadSceneMode.Additive);
 			newSceneOp.allowSceneActivation = false;
 			yield return new WaitForSeconds(.1f);
 
-			//Update until the scene is done loading
+			//Update loading scene until the new scene is done loading
 			while (!newSceneOp.isDone)
 			{
 				var progress = Mathf.Clamp01(newSceneOp.progress / 0.9f);
-				slider.value = progress;
-				text.text = $"{progress * 100}%";
+				this._LoadingSlider.value = progress;
+				this._LoadingText.text = $"{progress * 100}%";
 
-				//After all the initial loading has been done for the scene allow it to delete the old scenes
+				//After all the initial loading has been done for the new scene allow it to exit this loop
+				yield return new WaitForSeconds(.1f);
 				if (progress.Equals(1.0f))
 				{
 					this._BusyLoading = false;
 					newSceneOp.allowSceneActivation = true;
+					break;
 				}
-				yield return new WaitForSeconds(.1f);
+			}
+
+			//Only unload this scene if it's unwanted
+			if (this.UnloadThisScene)
+			{
+				var unloadOp = SceneManager.UnloadSceneAsync(this.gameObject.scene);
+				while (!unloadOp.isDone)
+				{
+					yield return null;
+				}
+			}
+			//If the scene is not unloaded then the loading canvas has to be disabled manually
+			else
+			{
+				this._LoadingCanvas.enabled = false;
 			}
 		}
 	}

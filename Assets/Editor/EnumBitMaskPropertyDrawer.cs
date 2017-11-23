@@ -1,11 +1,20 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.EditorBitMask
+namespace Assets.EditorScripts
 {
-	public static class EditorExtension
+	[CustomPropertyDrawer(typeof(BitMaskAttribute))]
+	public class EnumBitMaskPropertyDrawer : PropertyDrawer
 	{
+		public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
+		{
+			//Add the actual int value behind the field name
+			label.text = $"{label.text} ({prop.intValue})";
+			prop.intValue = DrawBitMaskField(position, prop.intValue, ((BitMaskAttribute)this.attribute).propType, label);
+		}
+
 		public static int DrawBitMaskField(Rect aPosition, int aMask, Type aType, GUIContent aLabel)
 		{
 			var itemNames = Enum.GetNames(aType);

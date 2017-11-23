@@ -9,9 +9,10 @@ namespace Assets.Scripts
 	{
 		public string RuntimeGuid { get; protected set; } = Guid.NewGuid().ToString();
 		public string Name;
+		[Header("Stats")]
+		public float Damage = 10.0f;
 		public float Knockback = 1.0f;
-		public float AttackRateInMilliseconds = 100;
-		public int Damage = 10;
+		public float AttackRateInMilliseconds = 100.0f;
 
 		public GameObject Player { get; protected set; }
 		public float NextAllowedToAttack { get; protected set; }

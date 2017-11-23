@@ -12,7 +12,8 @@ namespace Assets.Scripts.HelperClasses
 		private static ReadOnlyCollection<string> _SceneNames;
 		public static ReadOnlyCollection<string> SceneNames => _SceneNames ?? (_SceneNames = CreateSceneNameList());
 
-		public static readonly string Test = nameof(Test);
+		public static readonly string MainMenu = nameof(MainMenu);
+		public static readonly string Surface = nameof(Surface);
 		public static readonly string Cave = nameof(Cave);
 		public static readonly string Loading = nameof(Loading);
 
