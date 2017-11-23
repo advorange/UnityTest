@@ -46,6 +46,11 @@ namespace Assets.Scripts.PlayerScripts
 
 		private void SceneLoaded(Scene scene, LoadSceneMode mode)
 		{
+			if (scene.name == Scenes.Loading)
+			{
+				return;
+			}
+
 			//Only use the most recently created spawn
 			this._Spawn = Tags.FindChildrenWithTag(scene, Tags.Spawn).Last().GetComponent<Transform>();
 			//If no spawn point then just leave the default transform's position
