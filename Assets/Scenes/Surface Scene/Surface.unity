@@ -277,6 +277,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 36cafb8354c3d1f499e8dc498b6eb39f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &423240766 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1313492486293074, guid: 36cafb8354c3d1f499e8dc498b6eb39f,
+    type: 2}
+  m_PrefabInternal: {fileID: 403512939}
+--- !u!114 &423240767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 423240766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1f2b81977389b45a6d026c7cd5dede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &692550575
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,8 +676,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa4afe6cd2458b44bb908303e375974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: go to MainMenu
-  SceneName: MainMenu
+  Text: go to Cave
+  SceneName: Cave
   UnloadThisScene: 1
   TieTextToSceneName: 1
 --- !u!23 &1189158022
