@@ -660,8 +660,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aa4afe6cd2458b44bb908303e375974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: go to Cave
-  SceneName: Cave
+  Text: go to MainMenu
+  SceneName: MainMenu
   UnloadThisScene: 1
   TieTextToSceneName: 1
 --- !u!23 &1189158022

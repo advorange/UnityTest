@@ -40,13 +40,28 @@ namespace Assets.Scripts.HelperClasses
 				.Where(x => !String.IsNullOrWhiteSpace(x))
 				.ToList().AsReadOnly();
 		}
-		public static GameObject[] FindChildrenWithTag(Scene scene, string tag)
+		/// <summary>
+		/// Returns every child a <see cref="Scene"/> has which is tagged with <paramref name="tag"/>.
+		/// </summary>
+		/// <param name="scene"></param>
+		/// <param name="tag"></param>
+		/// <returns></returns>
+		public static GameObject[] FindChildrenWithTag(this Scene scene, string tag)
 		{
+			if (!DoesTagExist(tag))
+			{
+				return Array.Empty<GameObject>();
+			}
+
 			try
 			{
-				var rootGameObjects = scene.GetRootGameObjects();
-				var allChildren = rootGameObjects.SelectMany(x => x.GetComponentsInChildren<Transform>().Select(y => y.gameObject));
-				return rootGameObjects.Concat(allChildren).Where(x => x.tag == tag).Distinct().ToArray();
+				//Made this into a single LINQ query to see how stpuid it could be
+				return scene.GetRootGameObjects()
+					.Select(go => go.GetAllChildren().Concat(new[] { go }))
+					.SelectMany(tfs => tfs)
+					.Where(tf => tf.tag == tag)
+					.Select(tf => tf.gameObject)
+					.Distinct().ToArray();
 			}
 			catch (Exception e)
 			{
@@ -55,12 +70,25 @@ namespace Assets.Scripts.HelperClasses
 				return Array.Empty<GameObject>();
 			}
 		}
-		public static GameObject[] FindChildrenWithTag(GameObject parent, string tag)
+		/// <summary>
+		/// Returns every child a <see cref="GameObject"/> has which is tagged with <paramref name="tag"/>.
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="tag"></param>
+		/// <returns></returns>
+		public static GameObject[] FindChildrenWithTag(this GameObject parent, string tag)
 		{
+			if (!DoesTagExist(tag))
+			{
+				return Array.Empty<GameObject>();
+			}
+
 			try
 			{
-				var allChildren = parent.GetComponentsInChildren<Transform>().Where(x => x.gameObject != parent);
-				return allChildren.Where(x => x.tag == tag).Select(x => x.gameObject).ToArray();
+				return parent.GetAllChildren()
+					.Where(child => child.CompareTag(tag))
+					.Select(child => child.gameObject)
+					.Distinct().ToArray();
 			}
 			catch (Exception e)
 			{
@@ -69,15 +97,27 @@ namespace Assets.Scripts.HelperClasses
 				return Array.Empty<GameObject>();
 			}
 		}
-		private static IEnumerable<Transform> GetAllChildren(Transform parent)
+		/// <summary>
+		/// Returns every child a <see cref="GameObject"/> has, down to the deepest level.
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <returns></returns>
+		public static IEnumerable<GameObject> GetAllChildren(this GameObject parent)
 		{
-			var children = new List<Transform>();
-			foreach (Transform child in parent.GetComponent<Transform>())
+			foreach (var child in parent.GetComponentsInChildren<Transform>())
 			{
-				children.AddRange(GetAllChildren(child));
+				yield return child.gameObject;
+				foreach (var deeperChild in GetAllChildren(child.gameObject))
+				{
+					yield return deeperChild;
+				}
 			}
-			return children;
 		}
+		/// <summary>
+		/// Returns true if <see cref="AssetTags"/> contains <paramref name="tag"/>.
+		/// </summary>
+		/// <param name="tag"></param>
+		/// <returns></returns>
 		public static bool DoesTagExist(string tag)
 		{
 			return AssetTags.Contains(tag);
