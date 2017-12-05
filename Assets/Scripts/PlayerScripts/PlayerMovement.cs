@@ -26,9 +26,11 @@ namespace Assets.Scripts.PlayerScripts
 				this._MoveDirection = this.transform.TransformDirection(this._MoveDirection) * this.MovementSpeed;
 				if (InputHelper.Jump)
 				{
+					PlayerManager.LoadCharacter();
 					this._MoveDirection.y = this.JumpSpeed;
 					this._MoveDirection.x += .01f * this.MovementSpeed;
 				}
+				//PlayerManager.SaveCharacter(this.gameObject);
 			}
 			else
 			{

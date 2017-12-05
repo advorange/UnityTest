@@ -102,16 +102,9 @@ namespace Assets.Scripts.HelperClasses
 		/// </summary>
 		/// <param name="parent"></param>
 		/// <returns></returns>
-		public static IEnumerable<GameObject> GetAllChildren(this GameObject parent)
+		public static GameObject[] GetAllChildren(this GameObject parent)
 		{
-			foreach (var child in parent.GetComponentsInChildren<Transform>())
-			{
-				yield return child.gameObject;
-				foreach (var deeperChild in GetAllChildren(child.gameObject))
-				{
-					yield return deeperChild;
-				}
-			}
+			return parent.GetComponentsInChildren<Transform>().Select(t => t.gameObject).Distinct().ToArray();
 		}
 		/// <summary>
 		/// Returns true if <see cref="AssetTags"/> contains <paramref name="tag"/>.
